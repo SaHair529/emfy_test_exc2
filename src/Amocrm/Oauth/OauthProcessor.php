@@ -1,4 +1,5 @@
 <?php
+namespace Amocrm\Oauth;
 
 class OauthProcessor
 {

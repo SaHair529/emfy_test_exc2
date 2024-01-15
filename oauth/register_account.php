@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
 
+use Amocrm\Oauth\OauthProcessor;
+
+
 if (!isset($_GET['code']) ||
     !isset($_GET['referer']) ||
     !isset($_GET['client_id']) ||
