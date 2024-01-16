@@ -31,7 +31,7 @@ if (isset($requestData['leads']['add'])) {
 elseif (isset($requestData['contacts']['add'])) {
     $contactId = $requestData['contacts']['add'][0]['id'];
     $contactName = $requestData['contacts']['add'][0]['name'];
-    $contactAddedTimestamp = $requestData['contacts'][0]['add']['last_modified'];
+    $contactAddedTimestamp = $requestData['contacts']['add'][0]['last_modified'];
     $responsibleUserId = $requestData['contacts']['add'][0]['responsible_user_id'];
     $responsibleUserName = 'TODO Добавить процесс получения имени'; # todo Добавить процесс получения имени
 
