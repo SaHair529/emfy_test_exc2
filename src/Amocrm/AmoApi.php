@@ -26,11 +26,6 @@ class AmoApi
     private function sendPostRequest(string $url, array $requestData): bool|string
     {
         $accountAccessTokenData = $this->getAccessTokenData();
-        # TODO REFRESH TOKEN
-//        if (time()-5 >= $accountAccessTokenData['expires_in']) {
-//            $this->refreshToken();
-//            $accountAccessTokenData = $this->getAccessTokenData();
-//        }
         $requestHeaders = [
             'Authorization: Bearer '.$accountAccessTokenData['access_token'],
             'Content-Type: application/json'
@@ -44,14 +39,25 @@ class AmoApi
         curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
 
         $response = curl_exec($ch);
-        curl_close($ch);
+        $responseAr = json_decode($response, true);
+        if (isset($responseAr['status']) && $responseAr['status'] === 401) {
+            $this->refreshToken();
+            $accountAccessTokenData = $this->getAccessTokenData();
+            $requestHeaders = [
+                'Authorization: Bearer '.$accountAccessTokenData['access_token'],
+                'Content-Type: application/json'
+            ];
 
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+            $response = curl_exec($ch);
+        }
+
+        curl_close($ch);
         return $response;
     }
 
     private function sendGetRequest(string $url): array
     {
-        # TODO REFRESH TOKEN
         $accountAccessTokenData = $this->getAccessTokenData();
         $requestHeaders = [
             'Authorization: Bearer '.$accountAccessTokenData['access_token'],
@@ -64,8 +70,21 @@ class AmoApi
         curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
 
         $response = json_decode(curl_exec($ch), true);
-        curl_close($ch);
 
+        $responseAr = json_decode($response, true);
+        if (isset($responseAr['status']) && $responseAr['status'] === 401) {
+            $this->refreshToken();
+            $accountAccessTokenData = $this->getAccessTokenData();
+            $requestHeaders = [
+                'Authorization: Bearer '.$accountAccessTokenData['access_token'],
+                'Content-Type: application/json'
+            ];
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+            $response = curl_exec($ch);
+        }
+
+        curl_close($ch);
         return $response;
     }
 
