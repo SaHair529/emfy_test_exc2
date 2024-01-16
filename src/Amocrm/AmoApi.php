@@ -9,6 +9,11 @@ class AmoApi
     {
     }
 
+    public function getUserById(int $id): array
+    {
+        return $this->sendGetRequest("https://$this->subdomain.amocrm.ru/api/v4/users/$id");
+    }
+
     public function addNote(string $entityType, int $entityId, string $noteType, array $params): string|bool
     {
         return $this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/notes", [[
@@ -38,6 +43,25 @@ class AmoApi
         curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
 
         $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+
+    private function sendGetRequest(string $url): array
+    {
+        $accountAccessTokenData = $this->getAccessTokenData();
+        $requestHeaders = [
+            'Authorization: Bearer '.$accountAccessTokenData['access_token'],
+            'Content-Type: application/json'
+        ];
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Включаем возврат результата в переменную
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+
+        $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
         return $response;
