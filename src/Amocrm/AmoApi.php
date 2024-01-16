@@ -9,12 +9,13 @@ class AmoApi
     {
     }
 
-    public function addNote(string $entityType, int $entityId, string $noteType, array $params): bool|string
+    public function addNote(string $entityType, int $entityId, string $noteType, array $params): array
     {
-        return $this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/$entityId/notes", [
+        return json_decode($this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/notes", [[
+            'entity_id' => $entityId,
             'note_type' => $noteType,
             'params' => $params
-        ]);
+        ]]), true);
     }
 
     private function sendPostRequest(string $url, array $requestData): bool|string
@@ -26,14 +27,15 @@ class AmoApi
         }
 
         $requestHeaders = [
-            'Authorization: Bearer '.$accountAccessTokenData['access_token']
+            'Authorization: Bearer '.$accountAccessTokenData['access_token'],
+            'Content-Type: application/json'
         ];
 
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $requestData);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
         curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
 
         $response = curl_exec($ch);
@@ -45,7 +47,7 @@ class AmoApi
 
     private function getAccessTokenData()
     {
-        return json_decode(file_get_contents(ACCESS_TOKEN_DIRPATH."/$this->subdomain.json"));
+        return json_decode(file_get_contents(ACCESS_TOKEN_DIRPATH."/$this->subdomain.json"), true);
     }
 
     private function refreshToken()

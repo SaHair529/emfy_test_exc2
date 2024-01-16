@@ -16,8 +16,8 @@ class OauthProcessor
 
     public static function refreshToken(string $subdomain)
     {
-        $accessTokenData = json_decode(file_get_contents(ACCESS_TOKEN_DIRPATH."/$subdomain.json"));
-        $clientSecrets = json_decode(file_get_contents(CLIENT_SECRETS_DIRPATH."/$subdomain.json"));
+        $accessTokenData = json_decode(file_get_contents(ACCESS_TOKEN_DIRPATH."/$subdomain.json"), true);
+        $clientSecrets = json_decode(file_get_contents(CLIENT_SECRETS_DIRPATH."/$subdomain.json"), true);
         $requestData = [
             'client_id' => $clientSecrets['client_id'],
             'client_secret' => $clientSecrets['client_secret'],
