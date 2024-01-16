@@ -44,12 +44,12 @@ elseif (isset($requestData['contacts']['add'])) {
 elseif (isset($requestData['leads']['update'])) {
     $leadId = $requestData['leads']['update'][0]['id'];
     $leadUpdatedTimestamp = $requestData['leads']['update'][0]['last_modified'];
-
+    # todo добавить название и значение измененных полей
     echo $notifyProcessor->updateNotify($leadId, 'leads', $leadUpdatedTimestamp);
 }
 elseif (isset($requestData['contacts']['update'])) {
     $contactId = $requestData['contacts']['update'][0]['id'];
     $contactUpdatedTimestamp = $requestData['contacts']['update'][0]['last_modified'];
-
+    # todo добавить название и значение измененных полей
     echo $notifyProcessor->updateNotify($contactId, 'contacts', $contactUpdatedTimestamp);
 }

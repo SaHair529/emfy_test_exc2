@@ -26,6 +26,7 @@ class AmoApi
     private function sendPostRequest(string $url, array $requestData): bool|string
     {
         $accountAccessTokenData = $this->getAccessTokenData();
+        # TODO REFRESH TOKEN
 //        if (time()-5 >= $accountAccessTokenData['expires_in']) {
 //            $this->refreshToken();
 //            $accountAccessTokenData = $this->getAccessTokenData();
@@ -50,6 +51,7 @@ class AmoApi
 
     private function sendGetRequest(string $url): array
     {
+        # TODO REFRESH TOKEN
         $accountAccessTokenData = $this->getAccessTokenData();
         $requestHeaders = [
             'Authorization: Bearer '.$accountAccessTokenData['access_token'],
