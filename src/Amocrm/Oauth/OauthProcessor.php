@@ -26,6 +26,6 @@ class OauthProcessor
             'redirect_uri' => $clientSecrets['redirect_uri']
         ];
 
-        return RequestsSender::post("https://$subdomain.amocrm.ru/oauth2/refresh_token", $requestData);
+        return RequestsSender::post("https://$subdomain.amocrm.ru/oauth2/access_token", $requestData);
     }
 }
