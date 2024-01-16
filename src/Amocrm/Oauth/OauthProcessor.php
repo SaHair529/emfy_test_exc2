@@ -5,13 +5,17 @@ use RequestsSender;
 
 class OauthProcessor
 {
-    public static function registerAccount(string $referer, array $registerData): string
+    public static function registerAccount(string $referer, array $registerData): string|bool
     {
         $registerData += [
             'grant_type' => 'authorization_code'
         ];
 
-        return RequestsSender::post("https://$referer/oauth2/access_token", $registerData);
+        $amoResponse =  json_decode(RequestsSender::post("https://$referer/oauth2/access_token", $registerData), true);
+        if ($amoResponse['status'] !== 200 && $amoResponse['status'] !== 201)
+            return false;
+
+        return json_encode($amoResponse);
     }
 
     public static function refreshToken(string $subdomain)
