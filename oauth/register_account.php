@@ -24,7 +24,7 @@ if ($accessTokenData === false)
     die;
 
 $subdomain = explode('.', $_GET['referer'])[0];
-file_put_contents(ACCESS_TOKEN_DIRPATH."/$subdomain.json", $accessTokenData);
+file_put_contents(ACCESS_TOKEN_DIRPATH."/$subdomain.json", json_encode($accessTokenData));
 file_put_contents(CLIENT_SECRETS_DIRPATH."/$subdomain.json", json_encode([
     'client_id' => $_GET['client_id'],
     'client_secret' => $_GET['client_secret'],
