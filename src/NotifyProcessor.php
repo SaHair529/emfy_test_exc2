@@ -26,8 +26,13 @@ class NotifyProcessor
         ]);
     }
 
-    public function updateNotify()
+    public function updateNotify(int $entityId, string $entityType, int $entityUpdatedTimestamp): string|bool
     {
+        $entityUpdatedTimeStr = date('d.m.Y H:i', $entityUpdatedTimestamp);
+        $noteText = "Время изменения: $entityUpdatedTimeStr";
 
+        return $this->amoApi->addNote($entityType, $entityId, 'common', [
+            'text' => $noteText
+        ]);
     }
 }

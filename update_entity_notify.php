@@ -41,4 +41,15 @@ elseif (isset($requestData['contacts']['add'])) {
 
     echo $notifyProcessor->addNotify($contactId, $contactName, 'contacts', $responsibleUser['name'], $contactAddedTimestamp);
 }
-//elseif (isset($requestData['leads']['update']))
+elseif (isset($requestData['leads']['update'])) {
+    $leadId = $requestData['leads']['update'][0]['id'];
+    $leadUpdatedTimestamp = $requestData['leads']['update'][0]['last_modified'];
+
+    echo $notifyProcessor->updateNotify($leadId, 'leads', $leadUpdatedTimestamp);
+}
+elseif (isset($requestData['contacts']['update'])) {
+    $contactId = $requestData['contacts']['update'][0]['id'];
+    $contactUpdatedTimestamp = $requestData['contacts']['update'][0]['last_modified'];
+
+    echo $notifyProcessor->updateNotify($contactId, 'contacts', $contactUpdatedTimestamp);
+}
