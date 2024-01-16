@@ -9,22 +9,37 @@ class AmoApi
     {
     }
 
-    public function addNote(string $entityType, int $entityId, string $noteType, array $params)
+    public function addNote(string $entityType, int $entityId, string $noteType, array $params): bool|string
     {
-        $this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/$entityId/notes", [
+        return $this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/$entityId/notes", [
             'note_type' => $noteType,
             'params' => $params
         ]);
     }
 
-    private function sendPostRequest(string $url, array $requestData)
+    private function sendPostRequest(string $url, array $requestData): bool|string
     {
         $accountAccessTokenData = $this->getAccessTokenData();
         if (time()-5 >= $accountAccessTokenData['expires_in']) {
             $this->refreshToken();
             $accountAccessTokenData = $this->getAccessTokenData();
-            # todo Дописать логику отправки запросов в амо с использованием access token
         }
+
+        $requestHeaders = [
+            'Authorization: Bearer '.$accountAccessTokenData['access_token']
+        ];
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $requestData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
     }
 
 
