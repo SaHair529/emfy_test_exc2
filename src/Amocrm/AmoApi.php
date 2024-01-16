@@ -9,23 +9,22 @@ class AmoApi
     {
     }
 
-    public function addNote(string $entityType, int $entityId, string $noteType, array $params): array
+    public function addNote(string $entityType, int $entityId, string $noteType, array $params): string|bool
     {
-        return json_decode($this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/notes", [[
+        return $this->sendPostRequest("https://$this->subdomain.amocrm.ru/api/v4/$entityType/notes", [[
             'entity_id' => $entityId,
             'note_type' => $noteType,
             'params' => $params
-        ]]), true);
+        ]]);
     }
 
     private function sendPostRequest(string $url, array $requestData): bool|string
     {
         $accountAccessTokenData = $this->getAccessTokenData();
-        if (time()-5 >= $accountAccessTokenData['expires_in']) {
-            $this->refreshToken();
-            $accountAccessTokenData = $this->getAccessTokenData();
-        }
-
+//        if (time()-5 >= $accountAccessTokenData['expires_in']) {
+//            $this->refreshToken();
+//            $accountAccessTokenData = $this->getAccessTokenData();
+//        }
         $requestHeaders = [
             'Authorization: Bearer '.$accountAccessTokenData['access_token'],
             'Content-Type: application/json'

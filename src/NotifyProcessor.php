@@ -16,12 +16,12 @@ class NotifyProcessor
         $this->amoApi = new AmoApi($subdomain);
     }
 
-    public function addNotify(int $entityId, string $entityName, string $entityType, string $responsibleUserName, int $entityAddedTimestamp)
+    public function addNotify(int $entityId, string $entityName, string $entityType, string $responsibleUserName, int $entityAddedTimestamp): string|bool
     {
         $entityAddedTimeStr = date('d.m.Y H:i', $entityAddedTimestamp);
         $noteText = "$entityName\nОтветственный: $responsibleUserName\nВремя добавления: $entityAddedTimeStr";
 
-        $this->amoApi->addNote($entityType, $entityId, 'common', [
+        return $this->amoApi->addNote($entityType, $entityId, 'common', [
             'text' => $noteText
         ]);
     }
