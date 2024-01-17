@@ -28,8 +28,8 @@ class DBSimulator
         if ($entityType === 'leads' && $oldEntity['price'] !== $updatedEntity['price'])
             $changedFields['Бюджет'] = $updatedEntity['price'];
 
-        $updatedCustomFields = array_column($updatedEntity['custom_fields'], null, 'id');
-        $oldCustomFields = array_column($oldEntity['custom_fields'], null, 'id');
+        $updatedCustomFields = array_column($updatedEntity['custom_fields'] ?? [], null, 'id');
+        $oldCustomFields = array_column($oldEntity['custom_fields'] ?? [], null, 'id');
 
         foreach ($updatedCustomFields as $fieldId => $field) {
             if (!isset($oldCustomFields[$fieldId])) {
