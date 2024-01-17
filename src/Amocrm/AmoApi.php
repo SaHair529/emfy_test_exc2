@@ -71,8 +71,7 @@ class AmoApi
 
         $response = json_decode(curl_exec($ch), true);
 
-        $responseAr = json_decode($response, true);
-        if (isset($responseAr['status']) && $responseAr['status'] === 401) {
+        if (isset($response['status']) && $response['status'] === 401) {
             $this->refreshToken();
             $accountAccessTokenData = $this->getAccessTokenData();
             $requestHeaders = [
@@ -81,7 +80,7 @@ class AmoApi
             ];
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
-            $response = curl_exec($ch);
+            $response = json_decode(curl_exec($ch), true);
         }
 
         curl_close($ch);

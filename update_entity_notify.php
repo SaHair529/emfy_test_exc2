@@ -24,22 +24,20 @@ $notifyProcessor = new NotifyProcessor($requestData['account']['subdomain']);
 $amoApi = new AmoApi($requestData['account']['subdomain']);
 
 if (isset($requestData['leads']['add'])) {
-    $leadId = $requestData['leads']['add'][0]['id'];
-    $leadName = $requestData['leads']['add'][0]['name'];
-    $leadAddedTimestamp = $requestData['leads']['add'][0]['last_modified'];
-    $responsibleUserId = $requestData['leads']['add'][0]['responsible_user_id'];
-    $responsibleUser = $amoApi->getUserById($responsibleUserId);
+    $lead = $requestData['leads']['add'][0];
+    DBSimulator::saveEntity('leads', $lead);
 
-    echo $notifyProcessor->addNotify($leadId, $leadName,'leads', $responsibleUser['name'], $leadAddedTimestamp);
+    $responsibleUser = $amoApi->getUserById($lead['responsible_user_id']);
+
+    echo $notifyProcessor->addNotify($lead['id'], $lead['name'],'leads', $responsibleUser['name'], $lead['last_modified']);
 }
 elseif (isset($requestData['contacts']['add'])) {
-    $contactId = $requestData['contacts']['add'][0]['id'];
-    $contactName = $requestData['contacts']['add'][0]['name'];
-    $contactAddedTimestamp = $requestData['contacts']['add'][0]['last_modified'];
-    $responsibleUserId = $requestData['contacts']['add'][0]['responsible_user_id'];
-    $responsibleUser = $amoApi->getUserById($responsibleUserId);
+    $contact = $requestData['contacts']['add'][0];
+    DBSimulator::saveEntity('contacts', $contact);
 
-    echo $notifyProcessor->addNotify($contactId, $contactName, 'contacts', $responsibleUser['name'], $contactAddedTimestamp);
+    $responsibleUser = $amoApi->getUserById($contact['responsible_user_id']);
+
+    echo $notifyProcessor->addNotify($contact['id'], $contact['name'], 'contacts', $responsibleUser['name'], $contact['last_modified']);
 }
 elseif (isset($requestData['leads']['update'])) {
     $leadId = $requestData['leads']['update'][0]['id'];

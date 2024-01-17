@@ -20,7 +20,7 @@ $accessTokenData = OauthProcessor::registerAccount($_GET['referer'], [
     'redirect_uri' => $redirectUri
 ]);
 
-if ($accessTokenData === false)
+if (!isset($accessTokenData['access_token']))
     die;
 
 $subdomain = explode('.', $_GET['referer'])[0];
