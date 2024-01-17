@@ -26,10 +26,14 @@ class NotifyProcessor
         ]);
     }
 
-    public function updateNotify(int $entityId, string $entityType, int $entityUpdatedTimestamp): string|bool
+    public function updateNotify(int $entityId, string $entityType, int $entityUpdatedTimestamp, array $changedFields): string|bool
     {
         $entityUpdatedTimeStr = date('d.m.Y H:i', $entityUpdatedTimestamp);
-        $noteText = "Время изменения: $entityUpdatedTimeStr";
+        $noteText = "Время изменения: $entityUpdatedTimeStr\n\nИзменённые поля:\n\n";
+
+        foreach ($changedFields as $fieldName => $fieldValue)
+            $noteText .= "$fieldName: $fieldValue\n";
+
 
         return $this->amoApi->addNote($entityType, $entityId, 'common', [
             'text' => $noteText

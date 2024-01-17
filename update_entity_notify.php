@@ -40,14 +40,16 @@ elseif (isset($requestData['contacts']['add'])) {
     echo $notifyProcessor->addNotify($contact['id'], $contact['name'], 'contacts', $responsibleUser['name'], $contact['last_modified']);
 }
 elseif (isset($requestData['leads']['update'])) {
-    $leadId = $requestData['leads']['update'][0]['id'];
-    $leadUpdatedTimestamp = $requestData['leads']['update'][0]['last_modified'];
-    # todo добавить название и значение измененных полей
-    echo $notifyProcessor->updateNotify($leadId, 'leads', $leadUpdatedTimestamp);
+    $lead = $requestData['leads']['update'][0];
+    $changedFields = DBSimulator::getChangedFields($lead, 'leads');
+    DBSimulator::saveEntity('leads', $lead);
+
+    echo $notifyProcessor->updateNotify($lead['id'], 'leads', $lead['last_modified'], $changedFields);
 }
 elseif (isset($requestData['contacts']['update'])) {
-    $contactId = $requestData['contacts']['update'][0]['id'];
-    $contactUpdatedTimestamp = $requestData['contacts']['update'][0]['last_modified'];
-    # todo добавить название и значение измененных полей
-    echo $notifyProcessor->updateNotify($contactId, 'contacts', $contactUpdatedTimestamp);
+    $contact = $requestData['contacts']['update'][0];
+    $changedFields = DBSimulator::getChangedFields($contact, 'contacts');
+    DBSimulator::saveEntity('contacts', $contact);
+
+    echo $notifyProcessor->updateNotify($contact['id'], 'contacts', $contact['last_modified'], $changedFields);
 }
